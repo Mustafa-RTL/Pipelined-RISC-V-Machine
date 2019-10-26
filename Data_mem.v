@@ -13,8 +13,8 @@
 
 module Data_mem(
 input clk,
-input [31:0]addr, 
-input MemWrite, 
+input [31:0]addr,
+input MemWrite,
 input MemRead,
 input HalfOperation,		// Added to indicate a half word load/store
 input ByteOperation,		// Added to indicate a Byte load/store
@@ -31,7 +31,7 @@ mem[1]=32'd9;
 mem[2]=32'd25;
 end
 
-always @(posedge   clk) begin
+always @(posedge clk) begin
 if (MemWrite)
 mem[address] <= data_write;
 end
