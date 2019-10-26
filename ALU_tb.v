@@ -135,7 +135,7 @@ begin
 	end
 
 	#10
-	if (r == a&b)
+	if (r == (a&b))
 		$display("AND PASSED");
 	else begin
 		$display("AND FAILED");
