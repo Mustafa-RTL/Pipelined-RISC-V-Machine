@@ -1,23 +1,12 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 10/01/2019 09:20:47 AM
-// Design Name: 
-// Module Name: inst_mem
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+/**********************************************************************
+* Module: Inst_mem.v
+* Project: Single Cycle RISC-V
+* Author: Kareem Alansary auckareemalansary@aucgypt.edu
+* Description: This is the Instruction Memory module
+* Change history: 25/10/2019 – File Created
+**********************************************************************/
+
 
 
 module inst_mem( input [31:0]pc,

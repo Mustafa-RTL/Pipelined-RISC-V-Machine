@@ -58,4 +58,3 @@
 `define     SYS_CSRRSI      3'b110
 `define     SYS_CSRRCI      3'b111
 
-
