@@ -110,12 +110,26 @@ begin
 
     `OPCODE_JALR:
     begin
-
+      alufn = `ALU_ADD;
+      jorbranch = 2'b10;
+      regwritesrc = 2'b01;
+      memread = 1'b0;
+      memtoreg = 1'b1;
+      memwrite = 1'b0;
+      alusrc = 1'b1;
+      regwrite = 1'b1;
     end
 
     `OPCODE_JAL:
     begin
-
+      alufn = `ALU_ADD;
+      jorbranch = 2'b01;
+      regwritesrc = 2'b01;
+      memread = 1'b0;
+      memtoreg = 1'b1;
+      memwrite = 1'b0;
+      alusrc = 1'b1;
+      regwrite = 1'b1;
     end
 
     `OPCODE_Arith_I:
@@ -130,17 +144,38 @@ begin
 
     `OPCODE_AUIPC:
     begin
-
+      alufn = `ALU_ADD;
+      jorbranch = 2'b00;
+      regwritesrc = 2'b00;
+      memread = 1'b0;
+      memtoreg = 1'b1;
+      memwrite = 1'b0;
+      alusrc = 1'b0;
+      regwrite = 1'b1;
     end
 
     `OPCODE_LUI:
     begin
-
+      alufn = `ALU_PASS;
+      jorbranch = 2'b00;
+      regwritesrc = 2'b10;
+      memread = 1'b0;
+      memtoreg = 1'b1;
+      memwrite = 1'b0;
+      alusrc = 1'b1;
+      regwrite = 1'b1;
     end
 
-    default:
+    default://NOP
     begin
-
+      alufn = `ALU_PASS;
+      jorbranch = 2'b00;
+      regwritesrc = 2'b10;
+      memread = 1'b0;
+      memtoreg = 1'b1;
+      memwrite = 1'b0;
+      alusrc = 1'b0;
+      regwrite = 1'b0;
     end
     endcase
 end
