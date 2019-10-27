@@ -40,18 +40,18 @@ if(!HalfOperation && !ByteOperation) // Word operation (standard)
 else
 	if(HalfOperation) // Half word Operation
 		if(!address[1])
-			assign data_read = MemRead?{16'b0000000000000000,mem[[7:2]address][SECOND_BYTE_OFFSET]:mem[[7:2]address][FIRST_BYTE_OFFSET]}:0;
+			assign data_read = MemRead?{16'd0,mem[[7:2]address][SECOND_BYTE_OFFSET]:mem[[7:2]address][FIRST_BYTE_OFFSET]}:0;
 		else
-			assign data_read = MemRead?{16'b0000000000000000,mem[[7:2]address][MEM_WIDTH]:mem[[7:2]address][THIRD_BYTE_OFFSET]}:0;
+			assign data_read = MemRead?{16'd0,mem[[7:2]address][MEM_WIDTH]:mem[[7:2]address][THIRD_BYTE_OFFSET]}:0;
 	else	// Byte Operation
 		if(!address[1] && !address[0])
-			assign data_read = MemRead?{24'b000000000000000000000000, mem[[7:2]address][SECOND_BYTE_OFFSET]:mem[[7:2]address][FIRST_BYTE_OFFSET]}:0;
+			assign data_read = MemRead?{24'd0, mem[[7:2]address][SECOND_BYTE_OFFSET]:mem[[7:2]address][FIRST_BYTE_OFFSET]}:0;
 		else
 			if(!address[1] && address[0])
-				assign data_read = MemRead?{24'b000000000000000000000000, mem[[7:2]address][THIRD_BYTE_OFFSET]:mem[[7:2]address][SECOND_BYTE_OFFSET]}:0;
+				assign data_read = MemRead?{24'd0, mem[[7:2]address][THIRD_BYTE_OFFSET]:mem[[7:2]address][SECOND_BYTE_OFFSET]}:0;
 			else
 				if(address[1] && !address[0])
-					assign data_read = MemRead?{24'b000000000000000000000000, mem[[7:2]address][FOURTH_BYTE_OFFSET]:mem[[7:2]address][THIRD_BYTE_OFFSET]}:0;
+					assign data_read = MemRead?{24'd0, mem[[7:2]address][FOURTH_BYTE_OFFSET]:mem[[7:2]address][THIRD_BYTE_OFFSET]}:0;
 				else
-					assign data_read = MemRead?{24'b000000000000000000000000, mem[[7:2]address][MEM_WIDTH]:mem[[7:2]address][FOURTH_BYTE_OFFSET]}:0;
+					assign data_read = MemRead?{24'd0, mem[[7:2]address][MEM_WIDTH]:mem[[7:2]address][FOURTH_BYTE_OFFSET]}:0;
 endmodule
