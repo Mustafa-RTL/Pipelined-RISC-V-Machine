@@ -37,10 +37,10 @@ if(MemWrite & ~MemRead)
 if(!HalfOperation && !ByteOperation) // Word operation (standard)
 	   mem[address[7:2]] <= data_write;
 else
-	if(HalfOperation) 
+	if(HalfOperation)
 		if(!address[0])  //if LSB is 1, we store in the lower 16 bits
 			mem[address[7:2]] <=  {mem[address[7:2]][31:16] , data_write[15:0]};
-		
+
 		else
 			mem[address[7:2]] <=  {data_write[15:0], mem[address[7:2]][15:0]};
 	else	// Byte Operation
@@ -51,7 +51,7 @@ else
 				mem[address[7:2]] <=   {mem[address[7:2]][31:16],  data_write[7:0],mem[address[7:2]][7:0]} ;
 			else
 				if(address[1] && !address[0])
-					mem[address[7:2]] <=  {mem[address[7:2]][31:24], data_write[7:0], mem[address[7:2]][7:0]} ;
+					mem[address[7:2]] <=  {mem[address[7:2]][31:24], data_write[7:0], mem[address[7:2]][15:0]} ;
 				else
 					mem[address[7:2]] <=  { data_write[7:0],mem[address[7:2]][23:0]};
 end

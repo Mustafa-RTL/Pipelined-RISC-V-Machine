@@ -17,7 +17,7 @@
 `define     OPCODE_Arith_R  5'b01_100
 `define     OPCODE_AUIPC    5'b00_101
 `define     OPCODE_LUI      5'b01_101
-`define     OPCODE_SYSTEM   5'b11_100 
+`define     OPCODE_SYSTEM   5'b11_100
 `define     OPCODE_Custom   5'b10_001
 
 `define     F3_ADD          3'b000
@@ -58,3 +58,9 @@
 `define     SYS_CSRRSI      3'b110
 `define     SYS_CSRRCI      3'b111
 
+//For Load and Store
+`define     F3_B            3'b000
+`define     F3_H            3'b001
+`define     F3_W            3'b010
+`define     F3_BU           3'b100
+`define     F3_HU           3'b101
