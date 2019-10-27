@@ -32,27 +32,42 @@ mem[2]=32'd25;
 end
 
 always @(posedge clk) begin
-if (MemWrite)
-mem[address] <= data_write;
+if(MemWrite)
+	if(HalfOperation)
+		if(!address[1])
+			mem[address[7:2]] = {16'd0,data_write};
+		else
+			mem[address[7:2]] = {data_write,16'd0};
+	else	// Byte Operation
+		if(!address[1] && !address[0])
+			mem[address[7:2]] = {24'd0, data_write};
+		else
+			if(!address[1] && address[0])
+				mem[address[7:2]] = {16'd0,data_write,8'd0};
+			else
+				if(address[1] && !address[0])
+					mem[address[7:2]] = {8'd0, data_write,16'd0};
+				else
+					mem[address[7:2]] = { data_write,24'd0};
 end
 if(!HalfOperation && !ByteOperation) // Word operation (standard)
 	assign  data_read = MemRead?mem[[7:2]address]:0;
 else
 	if(HalfOperation) // Half word Operation
 		if(!address[1])
-			assign data_read = MemRead?{16'd0,[SECOND_BYTE_OFFSET]mem[[7:2]address]:[FIRST_BYTE_OFFSET]mem[[7:2]address]}:0;
+			assign data_read = MemRead?{16'd0,mem[address[7:2]][SECOND_BYTE_OFFSET]:mem[address[7:2]][FIRST_BYTE_OFFSET]}:0;
 		else
-			assign data_read = MemRead?{16'd0,[MEM_WIDTH]mem[[7:2]address]:[THIRD_BYTE_OFFSET]mem[[7:2]address]}:0;
+			assign data_read = MemRead?{mem[address[7:2]][MEM_WIDTH]:mem[address][7:2][THIRD_BYTE_OFFSET],16'd0}:0;
 	else	// Byte Operation
 		if(!address[1] && !address[0])
-			assign data_read = MemRead?{24'd0, [SECOND_BYTE_OFFSET]mem[[7:2]address]:[FIRST_BYTE_OFFSET]mem[[7:2]address]}:0;
+			assign data_read = MemRead?{24'd0, mem[address[7:2]][SECOND_BYTE_OFFSET]:mem[address[7:2]][FIRST_BYTE_OFFSET]}:0;
 		else
 			if(!address[1] && address[0])
-				assign data_read = MemRead?{24'd0,[THIRD_BYTE_OFFSET] mem[[7:2]address]:[SECOND_BYTE_OFFSET]mem[[7:2]address]}:0;
+				assign data_read = MemRead?{16'd0, mem[address[7:2]][THIRD_BYTE_OFFSET]:mem[address[7:2]][SECOND_BYTE_OFFSET],8'd0}:0;
 			else
 				if(address[1] && !address[0])
-					assign data_read = MemRead?{24'd0, [FOURTH_BYTE_OFFSET]mem[[7:2]address]:[THIRD_BYTE_OFFSET]mem[[7:2]address]}:0;
+					assign data_read = MemRead?{8'd0, mem[address[7:2]][FOURTH_BYTE_OFFSET]:mem[address[7:2]][THIRD_BYTE_OFFSET],16'd0}:0;
 				else
-					assign data_read = MemRead?{24'd0, [MEM_WIDTH]mem[[7:2]address]:[FOURTH_BYTE_OFFSET]mem[[7:2]address]}:0;
-data_read = Mem_out;
+					assign data_read = MemRead?{mem[address[7:2]][MEM_WIDTH]:mem[address[7:2]][FOURTH_BYTE_OFFSET],24'd0}:0;
+
 endmodule
