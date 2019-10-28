@@ -6,9 +6,10 @@
 * Project: Single Cycle RISC-V
 * Author: Kareem Alansary auckareemalansary@aucgypt.edu
 * Description: This is the Data Memory module
-* Change history:	25/10/2019 – File Created
+* Change history:	25/10/2019 - File Created
 *				 	26/10/2019 - Added Half word and byte supporting code
-                    27/10/2019 - Edited and corrected by Haitham Samir
+*                   27/10/2019 - Edited and corrected by Haitham Samir
+*					28/10/2019 - Edited and corrected by Kareem Alansary
 *********************************************************************/
 
 
@@ -22,12 +23,12 @@ input ByteOperation,		// Added to indicate a Byte load/store
 input [31:0] data_write,
 output reg [31:0] data_read);
 							// If HalfOperation and ByteOperation are LOW then by default the Memory Operation is a word Operation
-reg [8:0] mem [0:255];
+reg [7:0] mem [0:255];
 
 initial begin
-mem[0]= 32'b11111111_01010100_00000000_10100100;
-mem[1]=32'b10010110_01010100_01011110_10100100;
-mem[2]= 32'b11111111_11111111_00000000_00000000;
+mem[0]= 8'b11111111;
+mem[1]= 8'b01010100;
+mem[2]= 8'b00000000;
 end
 
 always @(posedge clk) begin

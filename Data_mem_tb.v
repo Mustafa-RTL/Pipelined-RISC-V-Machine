@@ -1,23 +1,12 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 10/27/2019 09:35:28 PM
-// Design Name: 
-// Module Name: Data_mem_tb
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+/*********************************************************************
+* Module: Data_mem.v
+* Project: Single Cycle RISC-V
+* Author: Kareem Alansary auckareemalansary@aucgypt.edu
+* Description: This is the Data Memory module
+* Change history:	26/10/2019 - Created by Haitham Samir
+*                   27/10/2019 - Edited and corrected by Kareem Alansary
+*********************************************************************/
 
 
 module Data_mem_tb();
@@ -48,7 +37,7 @@ ByteOperation=1;
 data_write=0;
 #10
 
-addr={32'd1}; //lower half of mem[1]
+addr={32'd0}; //lower half of mem[1]
 MemWrite=0;
 MemRead=1;
 HalfOperation=1;
