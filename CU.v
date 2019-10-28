@@ -21,10 +21,12 @@ module CU(
     output reg [1:0] jorbranch,
     output reg [1:0] regwritesrc,
     output reg memread,memtoreg,memwrite,alusrc,regwrite,
-    output reg [1:0] memsizesel
+    output reg [1:0] memsizesel,
+    output reg [5:0] shamt
     );
 always @(*)
 begin
+    shamt = 6'b0;   //default no shift
     memsizesel = 2'b00; // default size is one word
     case(`OPCODE)
     `OPCODE_Branch:
@@ -154,6 +156,7 @@ begin
 
     `OPCODE_Arith_I:
     begin
+      shamt = {1'b0, IR[`IR_rs2]};
       case(IR[`IR_funct3])
       `F3_ADD:  alufn = `ALU_ADD;
       `F3_SLL:  alufn = `ALU_SLL;
@@ -182,6 +185,7 @@ begin
 
     `OPCODE_Arith_R:
     begin
+      shamt = 6'd32;
       case(IR[`IR_funct3])
       `F3_ADD:
       begin
