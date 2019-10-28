@@ -47,32 +47,8 @@ HalfOperation=0;
 ByteOperation=1;
 data_write=0;
 #10
-//lb for byte 2
-addr={30'b0, 2'b01};   
-MemWrite=0;
-MemRead=1;
-HalfOperation=0;
-ByteOperation=1;
-data_write=0;
-#10
-//lb for byte 3
-addr={30'b0, 2'b10};
-MemWrite=0;
-MemRead=1;
-HalfOperation=0;
-ByteOperation=1;
-data_write=0;
-#10
-//lb for byte 4
-addr={30'b0, 2'b11};
-MemWrite=0;
-MemRead=1;
-HalfOperation=0;
-ByteOperation=1;
-data_write=0;
-#10
 
-addr={30'd1, 2'b0}; //lower half of mem[1]
+addr={32'd1}; //lower half of mem[1]
 MemWrite=0;
 MemRead=1;
 HalfOperation=1;
@@ -80,99 +56,63 @@ ByteOperation=0;
 data_write=0;
 
 #10
-addr={30'd1, 2'b1}; //upper half of mem[1]
-MemWrite=0;
-MemRead=1;
-HalfOperation=1;
-ByteOperation=0;
-data_write=0;
-
-#10
-addr={30'd3, 2'b1}; //writing in location mem[3]
+addr={32'd3}; //writing in location mem[3]
 MemWrite=1;
 MemRead=0;
 HalfOperation=0;
 ByteOperation=0; // I will begin with normal sw inst. 
 data_write= 32'b11111111_00000000_11111111_00000000;
+
 #10
-addr={30'd3, 2'b0}; 
+addr={32'd3}; 
 MemWrite=0;
 MemRead=1;
 HalfOperation=0;  //I will check if it's written where expected by reading the location
 ByteOperation=0;
-#10
-addr={30'd3, 2'b00}; //writing byte 1
-MemWrite=1;
-MemRead=0;
-HalfOperation=0;
-ByteOperation=1;
-data_write= 8'b11111111;
-#10
-addr={30'd3, 2'b0} ; //mem[3], reading byte 1
-MemWrite=0;
-MemRead=1;
-HalfOperation=0;
-ByteOperation=1;
-#10
 
+#10
+addr={32'd7}; //writing byte 1
+MemWrite=1;
+MemRead=0;
+HalfOperation=0;
+ByteOperation=1;
+data_write= 8'b11110000;
+#10
+addr={32'd10}; //writing byte 1
+MemWrite=1;
+MemRead=0;
+HalfOperation=0;
+ByteOperation=1;
+data_write= 8'b11110000;
+#10
+addr={32'd7} ; //mem[3], reading byte 1
+MemWrite=0;
+MemRead=1;
+HalfOperation=0;
+ByteOperation=1;
 
-addr={30'd3, 2'b01}; //writing byte 2
-MemWrite=1;
-MemRead=0;
-HalfOperation=0;
-ByteOperation=1; 
-data_write= 8'b00000000;
 #10
-addr={30'd3, 2'b01} ; //mem[3], reading byte 2
+addr={32'd10} ; //mem[3], reading byte 1
 MemWrite=0;
 MemRead=1;
 HalfOperation=0;
 ByteOperation=1;
-#10
-addr={30'd3, 2'b10}; //writing byte 3
-MemWrite=1;
-MemRead=0;
-HalfOperation=0;
-ByteOperation=1; 
-data_write= 8'b11111111;
-#10
 
-addr={30'd3, 2'b10} ; //mem[3], reading byte 3
-MemWrite=0;
-MemRead=1;
-HalfOperation=0;
-ByteOperation=1;
 #10
-addr={30'd3, 2'b11}; //writing byte 4
-MemWrite=1;
-MemRead=0;
-HalfOperation=0;
-ByteOperation=1; 
-data_write= 8'b00000000;
-addr={30'd3, 2'b11} ; //mem[3], reading byte 4
-MemWrite=0;
-MemRead=1;
-HalfOperation=0;
-ByteOperation=1;
-#10
-addr={30'd3, 2'b00}; //reading location three after writing the 4 bytes, should yield = 00000000_11111111_00000000_11111111
+addr={32'd3}; //reading location three after writing the 4 bytes, should yield = 00000000_11111111_00000000_11111111
 MemWrite=0;
 MemRead=1;
 HalfOperation=0;
 ByteOperation=0; 
 
+#10
 
-
-
-
-
-
-
+addr={32'd8}; //lower half 
+MemWrite=1;
+MemRead=0;
+HalfOperation=1;
+ByteOperation=0;
+data_write=16'b00001111_00001111;
 end
-
-
-
-
-
 
 endmodule

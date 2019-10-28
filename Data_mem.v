@@ -32,27 +32,28 @@ end
 
 always @(posedge clk) begin
 if(MemWrite & ~MemRead)
-if(!HalfOperation && !ByteOperation) // Word operation (standard)
-	   mem[address] <= data_write[7:0];
-	   mem[address+1] <= data_write[15:8];
-	   mem[address+2] <= data_write[23:16];
-	   mem[address+3] <= data_write[31:24];
+	if(!HalfOperation && !ByteOperation) begin // Word operation (standard)
+	   mem[addr] <= data_write[7:0];
+	   mem[addr+1] <= data_write[15:8];
+	   mem[addr+2] <= data_write[23:16];
+	   mem[addr+3] <= data_write[31:24];
+   end
 else
 	if(HalfOperation)begin
-		mem[address] <=  { data_write[7:0]};
-		mem[address+1] <=  { data_write[15:8]};
+		mem[addr] <=  { data_write[7:0]};
+		mem[addr+1] <=  { data_write[15:8]};
 	end	
 	else	// Byte Operation
-		mem[address] <=  {data_write[7:0]};
+		mem[addr] <=  {data_write[7:0]};
 end
 always @(posedge clk) begin
 if(MemRead & ~MemWrite)
 if(!HalfOperation && !ByteOperation) // Word operation (standard)
-	   data_read <= {mem[address+3] , mem[address+2], mem[address+1], mem[address]};
+	   data_read <= {mem[addr+3] , mem[addr+2], mem[addr+1], mem[addr]};
 else
 	if(HalfOperation) // Half word Operation
-			 data_read = {16'd0,mem[address+1],mem[address]};
+			 data_read = {16'd0,mem[addr+1],mem[addr]};
 	else	// Byte Operation
-		 data_read = mem[24'd0,mem[address];
+		 data_read = {24'd0,mem[addr]};
 end
 endmodule
