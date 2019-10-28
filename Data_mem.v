@@ -22,10 +22,8 @@ input ByteOperation,		// Added to indicate a Byte load/store
 input [31:0] data_write,
 output reg [31:0] data_read);
 							// If HalfOperation and ByteOperation are LOW then by default the Memory Operation is a word Operation
-reg [31:0] mem [0:63];
-wire [7:0] address = addr [7:0];
-wire [15:0] halfWord;
-wire [7:0] byteWord;
+reg [8:0] mem [0:255];
+
 initial begin
 mem[0]= 32'b11111111_01010100_00000000_10100100;
 mem[1]=32'b10010110_01010100_01011110_10100100;
@@ -35,46 +33,26 @@ end
 always @(posedge clk) begin
 if(MemWrite & ~MemRead)
 if(!HalfOperation && !ByteOperation) // Word operation (standard)
-	   mem[address[7:2]] <= data_write;
+	   mem[address] <= data_write[7:0];
+	   mem[address+1] <= data_write[15:8];
+	   mem[address+2] <= data_write[23:16];
+	   mem[address+3] <= data_write[31:24];
 else
-	if(HalfOperation)
-		if(!address[0])  //if LSB is 1, we store in the lower 16 bits
-			mem[address[7:2]] <=  {mem[address[7:2]][31:16] , data_write[15:0]};
-
-		else
-			mem[address[7:2]] <=  {data_write[15:0], mem[address[7:2]][15:0]};
+	if(HalfOperation)begin
+		mem[address] <=  { data_write[7:0]};
+		mem[address+1] <=  { data_write[15:8]};
+	end	
 	else	// Byte Operation
-		if(!address[1] && !address[0])
-			mem[address[7:2]] <=  {mem[address[7:2]][31:8], data_write[7:0]};
-		else
-			if(!address[1] && address[0])
-				mem[address[7:2]] <=   {mem[address[7:2]][31:16],  data_write[7:0],mem[address[7:2]][7:0]} ;
-			else
-				if(address[1] && !address[0])
-					mem[address[7:2]] <=  {mem[address[7:2]][31:24], data_write[7:0], mem[address[7:2]][15:0]} ;
-				else
-					mem[address[7:2]] <=  { data_write[7:0],mem[address[7:2]][23:0]};
+		mem[address] <=  {data_write[7:0]};
 end
 always @(posedge clk) begin
 if(MemRead & ~MemWrite)
 if(!HalfOperation && !ByteOperation) // Word operation (standard)
-	  data_read = mem[address[7:2]];
+	   data_read <= {mem[address+3] , mem[address+2], mem[address+1], mem[address]};
 else
 	if(HalfOperation) // Half word Operation
-		if(!address[0])
-			 data_read = mem[address[7:2]][15:0];
-		else
-			 data_read = mem[address[7:2]][31:16];
+			 data_read = {16'd0,mem[address+1],mem[address]};
 	else	// Byte Operation
-		if(!address[1] && !address[0])
-			 data_read = mem[address[7:2]][7:0];
-		else
-			if(!address[1] && address[0])
-				 data_read = mem[address[7:2]][15:8];
-			else
-				if(address[1] && !address[0])
-					 data_read = mem[address[7:2]][23:16];
-				else
-					 data_read = mem[address[7:2]][31:24];
+		 data_read = mem[24'd0,mem[address];
 end
 endmodule
