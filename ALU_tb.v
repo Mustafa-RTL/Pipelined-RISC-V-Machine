@@ -19,7 +19,7 @@ module ALU_tb();
 
 reg [31:0] a;
 reg [31:0] b;
-reg [4:0]  shamt;
+reg [5:0]  shamt;
 wire [31:0] r;
 wire cf, zf, vf, sf;
 reg [3:0]  alufn;
@@ -40,7 +40,7 @@ begin
 	// arithmetic
 	a = 32'd32;
 	b = 32'd100;
-	shamt = 5'd1;
+	shamt = 6'd1;
 	alufn = `ALU_ADD;
 
 	#10
@@ -64,15 +64,15 @@ begin
 	// shift
 	#10
 	a = 255;
-	shamt = 1;
+	shamt = 6'b1;
 	alufn = `ALU_SRL;
 
 	#10
-	shamt = 5;
+	shamt = 6'd5;
 	alufn = `ALU_SRA;
 
 	#10
-	shamt = 2;
+	shamt = 6'd2;
 	alufn = `ALU_SLL;
 
 	// slt & sltu
