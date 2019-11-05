@@ -7,6 +7,6 @@ module FA(
     output sum,cout
     );
     
-    assign cout = (a&b) | (b&cin) | (cin&a);
-    assign sum = a ^ b ^ cin;
+    assign cout = (operand_a & operand_b) | (operand_b & cin) | (cin & operand_a);
+    assign sum = operand_a ^ operand_b ^ cin;
 endmodule
