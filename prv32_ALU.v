@@ -4,7 +4,7 @@ module prv32_ALU(
 	output  reg  [31:0] r,
 	output  wire        cf, zf, vf, sf,
 	input   wire [3:0]  alufn,
-	input 	reg [5:0] shamt
+	input 	wire [5:0] shamt
 );
 
     wire [31:0] add, sub, op_b;
@@ -27,7 +27,6 @@ module prv32_ALU(
 				shamtnew = b[5:0];
 			else
 				shamtnew = shamt;
-			end
 		end
 
     shifter shifter0(.a(a), .shamt(shamtnew), .stype(alufn[1:0]),  .r(sh));

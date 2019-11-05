@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
-//`include "defines_2.v"
-//`include "defines.v"
+`include "defines.v"
 /*********************************************************************
 * Module: Data_mem.v
 * Project: Single Cycle RISC-V
@@ -28,7 +27,18 @@ reg [7:0] mem [0:255];
 initial begin
 mem[0]= 8'b11111111;
 mem[1]= 8'b01010100;
-mem[2]= 8'b00000000;
+mem[2]= 8'b00000001;
+mem[3]= 8'b00000010;
+mem[4]= 8'b00000100;
+mem[5]= 8'b00001000;
+mem[6]= 8'b00010000;
+mem[7]= 8'b10000010;
+mem[8]= 8'b01000100;
+mem[9]= 8'b00101000;
+mem[10]= 8'b01010110;
+mem[11]= 8'b00011100;
+mem[12]= 8'b01111010;
+
 end
 
 always @(posedge clk) begin

@@ -65,7 +65,7 @@ begin
 
       `BR_BGE:
       begin
-        if (sf = vf)
+        if (sf == vf)
           jorbranch = 2'b01;  //branch
         else
           jorbranch = 2'b00; //pc+4

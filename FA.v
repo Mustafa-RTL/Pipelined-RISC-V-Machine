@@ -3,7 +3,7 @@
 
 
 module FA(
-    input a,b,cin,
+    input operand_a,operand_b,cin,
     output sum,cout
     );
     
