@@ -14,5 +14,5 @@ module pc(
 	input [31:0]pc_in,
 	output [31:0]pc_out
 );
-    N_bit_reg #(32) pc_reg (clk.(clk), rst.(rst), .1'b1(load).pc_in(D),pc_out.(Q));
+    N_bit_reg #(32) pc_reg (.clk(clk), .rst(rst), .load(1'b1), .D(pc_in), .Q(pc_out));
 endmodule

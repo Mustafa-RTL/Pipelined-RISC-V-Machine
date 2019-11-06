@@ -19,8 +19,8 @@ module N_bit_reg # (parameter N=32)(
     generate
         for (i=0; i<N; i=i+1)
         begin:FFs
-            mux_2x1 a(.out[i](a), .in[i](b), .load(sel), .D[i](c));
-            DFlipFlop b(.clk(clk), .rst(rst), .D_new[i](D), .Q[i](Q));
+            mux_2x1 mux(.a(Q[i]), .b(D[i]), .sel(load), .c(D_new[i]));
+            DFlipFlop FF(.clk(clk), .rst(rst), .D(D_new[i]), .Q(Q[i]));
         end
     endgenerate
 endmodule

@@ -70,7 +70,7 @@ module data_path(input clk, input rst);
      wire [31:0] d1;
      assign d1=32'b0; // to avoid floating input
         
-   mux_4x1 mux0(.a1(pc_gen_out), .b1(pc_inc_out), .c2(wb_writedata), .d1(d1), .sel(regwritesrc), .y(write_data));     
+   mux_4x1 mux0(.a1(pc_gen_out), .b1(pc_inc_out), .c1(wb_writedata), .d1(d1), .sel(regwritesrc), .y(write_data));     
             
    
     wire [31:0]alu_out;
@@ -102,7 +102,7 @@ module data_path(input clk, input rst);
     wire dummy_carry_2;
     N_bit_RCA #(32) pc_inc (.operand_a(pc_out), .operand_b(32'd4), .sum(pc_inc_out), .cout(dummy_carry_2));
     
-   assign dummy_carry <= 0;
-   assign dummy_carry_2 <= 0;
+   assign dummy_carry = 0;
+   assign dummy_carry_2 = 0;
 
 endmodule
