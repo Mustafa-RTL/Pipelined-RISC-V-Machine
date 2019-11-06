@@ -5,10 +5,10 @@
 * Project: Single Cycle RISC-V
 * Author: Kareem Alansary auckareemalansary@aucgypt.edu
 * Description: This is the Data Memory module
-* Change history:	25/10/2019 - File Created
-*				 	26/10/2019 - Added Half word and byte supporting code
-*                   27/10/2019 - Edited and corrected by Haitham Samir
-*					28/10/2019 - Edited and corrected by Kareem Alansary
+* Change history:	25/10/2019 - File Created (Kareem Alansary)
+*			26/10/2019 - Added Half word and byte supporting code
+*                   	27/10/2019 - Edited and corrected by Haitham Samir
+*			28/10/2019 - Edited and corrected by Kareem Alansary
 *********************************************************************/
 
 

@@ -1,4 +1,13 @@
 
+/*********************************************************************
+* Module: N_bit_RCA.v
+* Project: Single Cycle RISC-V
+* Author: Kareem Alansary auckareemalansary@aucgypt.edu
+* Description: This is the N-bit Ripple Carry Adder module
+* Change history:	25/10/2019 - File Created
+*                    	27/10/2019 - Edited and corrected by Haitham Samir
+*			6/11/2019 - Edited and corrected by Kareem Alansary and Mahmoud Ghidan
+*********************************************************************/
 module N_bit_RCA # (parameter N=32) (
 	input [N-1:0]operand_a,
 	input [N-1:0]operand_b,
@@ -9,7 +18,7 @@ module N_bit_RCA # (parameter N=32) (
     genvar i;
     generate
         for (i = 0; i < N; i = i + 1) begin:adder
-            FA adder(operand_a[i].(operand_a), operand_b[i].(operand_b), carry[i].(cin), sum[i].(sum), carry[i+1].(cout));
+            FA adder(.operand_a[i](operand_a), .operand_b[i](operand_b), .cin(carry[i]), .sum(sum[i]), .cout(carry[i+1]));
         end 
     endgenerate
     assign cout = carry[32];

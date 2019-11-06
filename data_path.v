@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
 /******************************************************************* *
-*	Module: module_name.v
+*	Module: data_path.v
 *	Project: Single Cycle RISC-V
 *	Author: Haitham,Kareem Alansary, Mahmoud Ghidan, Moustafa Mahmoud
-*	Description:
+*	Description:	The full data_path (integration) module
 *	Change history: 28/10/2019 Created module data_path (Haitham)
-*			28/10/2019-29/10/2019 Debbugging and submission
-*			(group)
+*			28/10/2019-29/10/2019 Debbugging and submission	(group)
 *			5/11/2019 Re-worte entire module (Kareem, Mahmoud)
+*			6/11/2019 debugging and code check (Kareem, Mustafa)
 **********************************************************************/
 module data_path(input clk, input rst);
  
@@ -15,14 +15,14 @@ module data_path(input clk, input rst);
  //PC wiring     
     wire [31:0]pc_in;  
     wire [31:0]pc_out;
-    pc program_counter (clk.(clk), pc_in.(pc_in), rst.(rst), pc_out.(pc_out));
+    pc program_counter (.clk(clk), .pc_in(pc_in), .rst(rst), .pc_out(pc_out));
     
     
   //instruction memory wiring  
     
     
     wire [31:0]inst_out;
-    InstMem inst_memory (.(pc_out >> 2)(addr), .inst_out(data_out)); //>> 2
+    InstMem inst_memory (.addr(pc_out >> 2), .data_out(inst_out)); //>> 2
     
     
     //control unit wiring
@@ -75,33 +75,34 @@ module data_path(input clk, input rst);
    
     wire [31:0]alu_out;
  
-    prv32_ALU alu (.rs1(a), .rs2_mux_out(b), .alu_out(r), .cf(cf),.zf(zf),.vf(vf),.sf(sf),.alufn(alufn),.shamt(shamt));
+    prv32_ALU alu (.a(rs1), .b(rs2_mux_out), .r(alu_out), .cf(cf),.zf(zf),.vf(vf),.sf(sf),.alufn(alufn),.shamt(shamt));
     
     
     wire [31:0]data_mem_out;
     
-    Data_mem data_mem (.clk(clk), .alu_out(addr), .memwrite(MemWrite), .memread(MemRead), .memsizesel[1](HalfOperation), .memsizesel[0](ByteOperation), .rs2(data_write), .data_mem_out(data_read)); // shift adr not readdata
+    Data_mem data_mem (.clk(clk), .addr(alu_out), .MemWrite(memwrite), .MemRead(memread), .HalfOperation(memsizesel[1]), .ByteOperation(memsizesel[0]), .data_write(rs2), .data_read(data_mem_out)); // shift adr not readdata
     
     mux_2x1 #(32) wb (.a(alu_out), .b(data_mem_out), .sel(memtoreg),.c(wb_writedata));
     
     
     //immediate shifter wiring
     wire [31:0]shift_out;
-    shift_1_left pc_shift (.imm_out(in), .shift_out(out));
+    shift_1_left pc_shift (.in(imm_out), .out(shift_out));
     
     
     //branch target adder wiring
    
     wire dummy_carry;
-    N_bit_RCA #(32) pc_gen (.pc_out(operand_a), .shift_out(operand_b), .pc_gen_out(sum), .dummy_carry(cout));
+    N_bit_RCA #(32) pc_gen (.operand_a(pc_out), .operand_b(shift_out), .sum(pc_gen_out), .cout(dummy_carry));
     
     //new mux(2) wiring
     mux_4x1 mux1(.a1(pc_inc_out), .b1(pc_gen_out), .c1(alu_out), .d1(d1), .sel(jorbranch), .y(pc_in));   
  
     //pc increment wiring
     wire dummy_carry_2;
-    N_bit_RCA #(32) pc_inc (.pc_out(operand_a), .32'd4(operand_b), .pc_inc_out(sum), .dummy_carry_2(cout));
+    N_bit_RCA #(32) pc_inc (.operand_a(pc_out), .operand_b(32'd4), .sum(pc_inc_out), .cout(dummy_carry_2));
     
-   
+   assign dummy_carry <= 0;
+   assign dummy_carry_2 <= 0;
 
 endmodule

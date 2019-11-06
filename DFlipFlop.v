@@ -1,24 +1,11 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 09/17/2019 03:05:01 PM
-// Design Name: 
-// Module Name: reg
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
+/********************************************************************
+*	Module: DFlipFlop.v
+*	Project: Single Cycle RISC-V
+*	Author: Kareem Alansary  auckareemalansary@aucegypt.edu
+*	Description:	D-Flip-Flop module
+*	Change history: 26/10/2019 – Created Module
+**********************************************************************/
 
 module DFlipFlop (input clk, input rst, input D, output reg Q);
      always @ (posedge clk or posedge rst) begin // Asynchronous Reset

@@ -1,10 +1,10 @@
- /******************************************************************* *
-
-Module: mux_4x1.v
-Project: Single Cycle RISC-V
-Author: Haitham Samir
-Description: 4x1 32-bit MUX
-Change history: Date - Action
+/*********************************************************************
+*	Module: mux_4x1.v
+*	Project: Single Cycle RISC-V
+*	Author: Haitham Samir
+*	Description: 4x1 N-bit MUX
+*	Change history: 26/10/2019 - created module
+*			5/11/2019  - changed structure to support N-bits (Kareem Alansary, Mahmoud Ghidan)
 **********************************************************************/
 module mux_4x1 #(parameter N =32)(
 	input[N-1:0]a1,
