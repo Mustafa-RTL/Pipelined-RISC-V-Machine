@@ -8,7 +8,7 @@
 *                    	27/10/2019 - Edited and corrected by Haitham Samir
 *			6/11/2019 - Edited and corrected by Kareem Alansary and Mahmoud Ghidan
 *********************************************************************/
-module program_counter(
+module pc(
 	input clk,
 	input rst,
 	input [31:0]pc_in,
