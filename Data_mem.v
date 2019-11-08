@@ -59,12 +59,13 @@ else
 end
 always @(*) begin
 if(MemRead & ~MemWrite)
-if(!HalfOperation && !ByteOperation) // Word operation (standard)
+	if(!HalfOperation && !ByteOperation) // Word operation (standard)
 	   data_read = {mem[addr+3] , mem[addr+2], mem[addr+1], mem[addr]};
-else
-	if(HalfOperation) // Half word Operation
+	else if(HalfOperation) // Half word Operation
 		data_read = {16'd0,mem[addr+1],mem[addr]};
 	else	// Byte Operation
 		data_read = {24'd0,mem[addr]};
+else
+	data_read = 32'b0;
 end
 endmodule
