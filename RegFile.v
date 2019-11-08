@@ -27,7 +27,7 @@ module RegFile (
         end
     endgenerate
     
-    N_bit_reg X0(.clk(clk), .D(32'b0), .rst(rst), .load(1'b1), .Q(out[i]));
+    N_bit_reg X0(.clk(clk), .D(32'b0), .rst(rst), .load(1'b1), .Q(out[0]));
 
     assign rs1 = out[rs1_addr];
     assign rs2 = out[rs2_addr];
