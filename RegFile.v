@@ -17,7 +17,7 @@ module RegFile (
 	output [31:0] rs1, rs2 
 );
 
-    wire [31:0] load;
+    reg [31:0] load;
     wire [31:0] out [0:31];
     
     genvar i;
