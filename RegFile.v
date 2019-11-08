@@ -34,7 +34,7 @@ module RegFile (
         
     always @(*)
     begin
-        load = 0;
+        load = 32'b0;
         if (regwrite)
           load[writereg_addr] = 1;
     end
