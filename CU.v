@@ -177,7 +177,7 @@ begin
       jorbranch = 2'b00;
       regwritesrc = 2'b10;
       memread = 1'b0;
-      memtoreg = 1'b1;
+      memtoreg = 1'b0;
       memwrite = 1'b0;
       alusrc = 1'b1;
       regwrite = 1'b1;
@@ -212,7 +212,7 @@ begin
       jorbranch = 2'b00;
       regwritesrc = 2'b10;
       memread = 1'b0;
-      memtoreg = 1'b1;
+      memtoreg = 1'b0;
       memwrite = 1'b0;
       alusrc = 1'b0;
       regwrite = 1'b1;
