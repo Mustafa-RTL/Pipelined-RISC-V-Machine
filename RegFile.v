@@ -36,7 +36,7 @@ module RegFile (
     begin
         load = 32'b0;
         if (regwrite)
-          load[writereg_addr] = 1;
+          load[writereg_addr] = 1'b1;
     end
     
 endmodule
