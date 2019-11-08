@@ -7,6 +7,7 @@ Description:	Register File Module
 Change history: 27/10/2019 – Created module
 *		5/11/2019  - Re-wrote module (Kareem)
 *		5/11/2019  - module debugging (Mustafa, Kareem)
+*       9/11/2019  - editing    (Mustafa)
 **********************************************************************/
 module RegFile (
 	input clk, rst,
@@ -16,20 +17,27 @@ module RegFile (
 	output [31:0] rs1, rs2 
 );
 
-    wire [31:0]load;
-    wire [31:0]out[0:31];
+    wire [31:0] load;
+    wire [31:0] out [0:31];
     
     genvar i;
     generate
-        for (i = 0; i < 32; i = i + 1) begin:RegsFile 
-            N_bit_reg regriar(.clk(clk), .D(writedata), .rst(rst), .load(load[i]), .Q(out[i]));
+        for (i = 1; i < 32; i = i + 1) begin:RegsFile 
+            N_bit_reg X(.clk(clk), .D(writedata), .rst(rst), .load(load[i]), .Q(out[i]));
         end
     endgenerate
     
-    assign rs1 = rs1_addr != 5'b0 ? out[rs1_addr] : 5'b0;
-    assign rs2 = rs2_addr != 5'b0 ? out[rs2_addr] : 5'b0;
+    N_bit_reg X0(.clk(clk), .D(32'b0), .rst(rst), .load(1'b1), .Q(out[i]));
+
+    assign rs1 = out[rs1_addr];
+    assign rs2 = out[rs2_addr];
         
-    assign load = regwrite ? 1'b1 << writereg_addr : 0;
+    always @(*)
+    begin
+        load = 0;
+        if (regwrite)
+          load[writereg_addr] = 1;
+    end
     
 endmodule
 
