@@ -102,7 +102,7 @@ module data_path(input clk, input rst);
     wire dummy_carry_2;
     N_bit_RCA #(32) pc_inc (.operand_a(pc_out), .operand_b(32'd4), .sum(pc_inc_out), .cout(dummy_carry_2));
     
-   assign dummy_carry = 0;
-   assign dummy_carry_2 = 0;
+   //assign dummy_carry = 0;      Mustafa: We don't need those because those carries are outputs from cout so they dont need to be drived.
+   //assign dummy_carry_2 = 0;
 
 endmodule
