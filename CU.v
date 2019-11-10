@@ -16,9 +16,9 @@
 
 module CU(
     input [31:0] IR,
-    input        cf, zf, vf, sf,
     output reg [3:0] alufn,
     output reg [1:0] jorbranch,
+    output reg [2:0] branch_type,
     output reg [1:0] regwritesrc,
     output reg memread,memtoreg,memwrite,alusrc,regwrite,
     output reg [1:0] memsizesel,
@@ -28,6 +28,7 @@ always @(*)
 begin
     shamt = 6'b0;   //default no shift
     memsizesel = 2'b00; // default size is one word
+    branch_type = IR[`IR_funct3];
     case(`OPCODE)
     `OPCODE_Branch:
     begin
@@ -38,62 +39,13 @@ begin
       memwrite = 1'b0;
       alusrc = 1'b0;
       regwrite = 1'b0;
-      case(IR[`IR_funct3])
-      `BR_BEQ:
-      begin
-        if (zf)
-          jorbranch = 2'b01;  //branch
-        else
-          jorbranch = 2'b00; //pc+4
-      end
-
-      `BR_BNE:
-      begin
-        if (~zf)
-          jorbranch = 2'b01;  //branch
-        else
-          jorbranch = 2'b00; //pc+4
-      end
-
-      `BR_BLT:
-      begin
-        if (sf != vf)
-          jorbranch = 2'b01;  //branch
-        else
-          jorbranch = 2'b00; //pc+4
-      end
-
-      `BR_BGE:
-      begin
-        if (sf == vf)
-          jorbranch = 2'b01;  //branch
-        else
-          jorbranch = 2'b00; //pc+4
-      end
-
-      `BR_BLTU:
-      begin
-        if (~cf)
-          jorbranch = 2'b01;  //branch
-        else
-          jorbranch = 2'b00; //pc+4
-      end
-
-      `BR_BGEU:
-      begin
-        if (cf)
-          jorbranch = 2'b01;  //branch
-        else
-          jorbranch = 2'b00; //pc+4
-      end
-      default: jorbranch = 2'b00; //pc+4
-      endcase
+      jorbranch = `BRANCH;
     end
 
     `OPCODE_Load:
     begin
       alufn = `ALU_ADD;
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b10;
       memread = 1'b1;
       memtoreg = 1'b1;
@@ -113,7 +65,7 @@ begin
     `OPCODE_Store:
     begin
       alufn = `ALU_ADD;
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b10;
       memread = 1'b0;
       memtoreg = 1'b0;
@@ -133,7 +85,7 @@ begin
     `OPCODE_JALR:
     begin
       alufn = `ALU_ADD;
-      jorbranch = 2'b10;
+      jorbranch = `JALR;
       regwritesrc = 2'b01;
       memread = 1'b0;
       memtoreg = 1'b1;
@@ -145,7 +97,7 @@ begin
     `OPCODE_JAL:
     begin
       alufn = `ALU_ADD;
-      jorbranch = 2'b01;
+      jorbranch = `JAL;
       regwritesrc = 2'b01;
       memread = 1'b0;
       memtoreg = 1'b1;
@@ -174,7 +126,7 @@ begin
       `F3_AND:  alufn = `ALU_AND;
       default:  alufn = `ALU_PASS;
       endcase
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b10;
       memread = 1'b0;
       memtoreg = 1'b0;
@@ -209,7 +161,7 @@ begin
       `F3_AND:  alufn = `ALU_AND;
       default:  alufn = `ALU_PASS;
       endcase
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b10;
       memread = 1'b0;
       memtoreg = 1'b0;
@@ -221,7 +173,7 @@ begin
     `OPCODE_AUIPC:
     begin
       alufn = `ALU_ADD;
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b00;
       memread = 1'b0;
       memtoreg = 1'b1;
@@ -233,7 +185,7 @@ begin
     `OPCODE_LUI:
     begin
       alufn = `ALU_PASS;
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b10;
       memread = 1'b0;
       memtoreg = 1'b1;
@@ -245,7 +197,7 @@ begin
     default://NOP
     begin
       alufn = `ALU_PASS;
-      jorbranch = 2'b00;
+      jorbranch = `NO_BRANCH;
       regwritesrc = 2'b10;
       memread = 1'b0;
       memtoreg = 1'b1;

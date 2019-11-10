@@ -64,3 +64,9 @@
 `define     F3_W            3'b010
 `define     F3_BU           3'b100
 `define     F3_HU           3'b101
+
+//For branch ctrl
+`define     NO_BRANCH       2'b00
+`define     BRANCH          2'b01
+`define     JALR            2'b10
+`define     JAL             2'b11
