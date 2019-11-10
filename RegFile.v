@@ -14,7 +14,7 @@ module RegFile (
 	input [4:0] rs1_addr, rs2_addr, writereg_addr,
 	input [31:0] writedata,
 	input regwrite,
-    input Moderator_in,
+    input tick_tock,
 	output [31:0] rs1, rs2 );
 
     reg [31:0]load;
@@ -31,9 +31,8 @@ module RegFile (
     
     always @(posedge clk) begin
         load=32'b0;
-        if(~Moderator_in)
-            if(regwrite)
-                load[writereg_addr]=1;
+        if(regwrite & ~tick_tock)
+            load[writereg_addr]=1;
     end        
     
     assign rs1 = out[rs1_addr];

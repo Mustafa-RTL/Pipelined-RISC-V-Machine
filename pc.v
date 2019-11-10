@@ -11,8 +11,9 @@
 module pc(
 	input clk,
 	input rst,
+	input tick_tock,
 	input [31:0]pc_in,
 	output [31:0]pc_out
 );
-    N_bit_reg #(32) pc_reg (.clk(clk), .rst(rst), .load(1'b1), .D(pc_in), .Q(pc_out));
+    N_bit_reg #(32) pc_reg (.clk(clk), .rst(rst), .load(~tick_tock), .D(pc_in), .Q(pc_out));
 endmodule
