@@ -12,6 +12,7 @@
 * Change history: 26/10/2019 – File Created
 *                 27/10/2019 – Added JALR, JAL, LUI, AUIPC, NOP
 *                 28/10/2019 – CU completed
+                  10/11/2019 - Edited for Pipelining
 **********************************************************************/
 
 module CU(
