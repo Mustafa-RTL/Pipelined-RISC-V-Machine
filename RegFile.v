@@ -7,6 +7,7 @@ Description:	Register File Module
 Change history: 27/10/2019 – Created module
 *		5/11/2019  - Re-wrote module (Kareem)
 *		5/11/2019  - module debugging (Mustafa, Kareem)
+*       10/11/2019 - Editing for pipelining (Kareem, Mustafa)
 **********************************************************************/
 module RegFile (
 	input clk, rst,
