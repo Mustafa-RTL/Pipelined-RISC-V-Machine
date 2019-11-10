@@ -195,7 +195,7 @@ begin
       regwrite = 1'b1;
     end
 
-    default://NOP
+    default: //NOP
     begin
       alufn = `ALU_PASS;
       jorbranch = `NO_BRANCH;
