@@ -25,13 +25,16 @@ module RegFile (
             N_bit_reg reg_x1_x31(.clk(clk), .D(writedata), .rst(rst), .load(load[i]), .Q(out[i]));
         end
     endgenerate
+    
     N_bit_reg reg_x0(.clk(clk), .D(32'b0), .rst(rst), .load(load[0]), .Q(out[0]));
+    
     always @(posedge clk) begin
         load=32'b0;
         if(~Moderator_in)
             if(regwrite)
                 load[writereg_addr]=1;
     end        
+    
     assign rs1 = out[rs1_addr];
     assign rs2 = out[rs2_addr]; 
 endmodule
