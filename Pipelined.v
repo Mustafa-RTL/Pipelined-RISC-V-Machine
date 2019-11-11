@@ -92,7 +92,7 @@ module Pipelined(input clk, input rst);
      .Q({EX_MEM_pc_inc, EX_MEM_BranchAddOut,
      EX_MEM_ALU_out, EX_MEM_RegR2, EX_MEM_Rd, EX_MEM_jorbranch, EX_MEM_branch_type, EX_MEM_memsizesel, EX_MEM_memread, EX_MEM_memwrite, EX_MEM_Ctrl, EX_MEM_cf,EX_MEM_zf,EX_MEM_vf,EX_MEM_sf}));
    
-    wire [31:0] MEM_WB_PC_inc, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out;
+    wire [31:0] MEM_WB_pc_inc, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out;
     wire [1:0] MEM_WB_regwrite_src;
     wire MEM_WB_memtoreg;
     wire MEM_WB_regwrite;
@@ -100,7 +100,7 @@ module Pipelined(input clk, input rst);
     wire [1:0] MEM_WB_pc_mux_ctrl;
     N_bit_reg #(139) MEM_WB (.clk(clk),.rst(rst),.load(1'b1),
      .D({pc_mux_ctrl, EX_MEM_Ctrl, EX_MEM_pc_inc, branch_pc, data_mem_out, EX_MEM_ALU_out, EX_MEM_Rd}),
-     .Q({MEM_WB_pc_mux_ctrl, MEM_WB_memtoreg, MEM_WB_regwrite, MEM_WB_regwrite_src, MEM_WB_PC_inc, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out,
+     .Q({MEM_WB_pc_mux_ctrl, MEM_WB_memtoreg, MEM_WB_regwrite, MEM_WB_regwrite_src, MEM_WB_pc_inc, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out,
      MEM_WB_Rd}));
 
     
@@ -127,8 +127,8 @@ module Pipelined(input clk, input rst);
     
     
     wire [31:0] d1;
-    assign d1=32'b0; // to avoid floating input
-    mux_4x1 wb_mux(.a1(EX_MEM_BranchAddOut), .b1(pc_inc_out), .c1(wb_writedata), .d1(d1), .sel(MEM_WB_regwrite_src), .y(write_data));     
+    assign d1=32'b0; // to avoid floating input**************************************************************
+    mux_4x1 wb_mux(.a1(MEM_WB_branch_pc), .b1(MEM_WB_pc_inc), .c1(wb_writedata), .d1(d1), .sel(MEM_WB_regwrite_src), .y(write_data));     
             
  
     prv32_ALU alu (.a(ID_EX_RegR1), .b(rs2_mux_out), .r(alu_out), .cf(cf),.zf(zf),.vf(vf),.sf(sf),.alufn(ID_EX_alufunc),.shamt(ID_EX_shamt));
