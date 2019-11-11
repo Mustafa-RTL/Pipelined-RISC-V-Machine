@@ -35,7 +35,7 @@ module RegFile (
             load[writereg_addr]=1;
     end        
     
-    assign rs1 = out[rs1_addr];
-    assign rs2 = out[rs2_addr]; 
+    assign rs1 = tick_tock ? out[rs1_addr] : 32'b0;
+    assign rs2 = tick_tock ? out[rs2_addr] : 32'b0; 
 endmodule
 

@@ -20,7 +20,7 @@ input MemWrite,
 input MemRead,
 input HalfOperation,			// Added to indicate a half word load/store
 input ByteOperation,			// Added to indicate a Byte load/store
-input tick_tock,				// Decides the type of operation (fetch / WB(load/store)) if(tick_tock == 1) Fetch else WB
+input tick_tock,				// Decides the type of operation (fetch / WB(load/store)) if(tick_tock == 0) Fetch else WB
 input [31:0] data_write,
 output reg [31:0] data_read); 	// Can be instruction or data
 								// If HalfOperation and ByteOperation are LOW then by default the Memory Operation is a word Operation

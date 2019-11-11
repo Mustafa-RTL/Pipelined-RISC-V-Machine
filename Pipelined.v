@@ -47,13 +47,21 @@ module Pipelined(input clk, input rst);
     //ALU wiring
     wire [31:0]alu_out;
 
-    //Data Mem Wiring
+    //Mem Wiring
     wire [31:0]data_mem_out;
-
+    wire [31:0] address;
     //immediate shifter wiring
     wire [31:0]shift_out;
     
-
+    //Moderator
+    wire tick_tock;
+    
+    //branch_crtl
+    wire [2:0] branch_type;
+    reg [1:0] pc_mux_ctrl;
+    wire pc_inc_or_branch;
+    wire [31:0] branch_pc;
+    
     //for pipelining
     /* wire [31:0] IF_ID_PC, IF_ID_Inst;
     
@@ -87,19 +95,22 @@ module Pipelined(input clk, input rst);
      MEM_WB_Rd});*/
 
     
+    assign pc_inc_or_branch = pc_mux_ctrl[0] | pc_mux_ctrl[1];
+    
+    
+    mux_2x1 #(32) pc_or_branch(.a(pc_inc_out), .b(branch_pc), .sel(pc_inc_or_branch),.c(pc_in));
+   
+    
     pc program_counter (.clk(clk), .pc_in(pc_in), .rst(rst), .pc_out(pc_out));
     
     
-    InstMem inst_memory (.addr(pc_out >> 2), .data_out(inst_out)); //>> 2
-    
-    
-    CU controlUnit (.IR(inst_out), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .alufn(alufn), .jorbranch(jorbranch), .regwritesrc(regwritesrc), .memread(memread),.memtoreg(memtoreg),.memwrite(memwrite),.alusrc(alusrc),.regwrite(regwrite), .memsizesel(memsizesel), .shamt(shamt));
+    CU controlUnit (.tick_tock(tick_tock), .IR(inst_out), .alufn(alufn), .branch_type(branch_type), .jorbranch(jorbranch), .regwritesrc(regwritesrc), .memread(memread),.memtoreg(memtoreg),.memwrite(memwrite),.alusrc(alusrc),.regwrite(regwrite), .memsizesel(memsizesel), .shamt(shamt));
     
        
-    RegFile reg_file (.clk(clk), .rst(rst), .rs1_addr(inst_out[19:15]), .rs2_addr(inst_out[24:20]), .writereg_addr(inst_out[11:7]),.writedata(write_data), .regwrite(regwrite), .rs1(rs1), .rs2(rs2));
+    RegFile reg_file (.clk(clk), .rst(rst), .tick_tock(tick_tock), .rs1_addr(inst_out[19:15]), .rs2_addr(inst_out[24:20]), .writereg_addr(inst_out[11:7]),.writedata(write_data), .regwrite(regwrite), .rs1(rs1), .rs2(rs2));
     
  
-    rv32_ImmGen IG (.IR(inst_out), .Imm(imm_out));
+    rv32_ImmGen IG (.tick_tock(tick_tock), .IR(inst_out), .Imm(imm_out));
 
   
     //the mux that determines the second source for ALU
@@ -112,9 +123,12 @@ module Pipelined(input clk, input rst);
             
  
     prv32_ALU alu (.a(rs1), .b(rs2_mux_out), .r(alu_out), .cf(cf),.zf(zf),.vf(vf),.sf(sf),.alufn(alufn),.shamt(shamt));
+   
+    
+    mux_2x1 #(32) mem_mux(.a(pc_in), .b(alu_out), .sel(tick_tock), .c(address));
     
     
-    Data_mem data_mem (.clk(clk), .addr(alu_out), .MemWrite(memwrite), .MemRead(memread), .HalfOperation(memsizesel[1]), .ByteOperation(memsizesel[0]), .data_write(rs2), .data_read(data_mem_out)); // shift adr not readdata
+    Memory mem(.clk(clk), .tick_tock(tick_tock), .addr(address), .MemWrite(memwrite), .MemRead(memread), .HalfOperation(memsizesel[1]), .ByteOperation(memsizesel[0]), .data_write(rs2), .data_read(data_mem_out)); // shift adr not readdata
     
     
     mux_2x1 #(32) wb (.a(alu_out), .b(data_mem_out), .sel(memtoreg),.c(wb_writedata));  //write data mux
@@ -123,13 +137,21 @@ module Pipelined(input clk, input rst);
     shift_1_left pc_shift (.in(imm_out), .out(shift_out));
     
     
+    branch_ctrl BCU(.jorbranch(jorbranch), .branch_type(branch_type), .cf(cf), .zf(zf), .vf(vf), .sf(sf), .pc_mux_ctrl(pc_mux_ctrl));
+    
+    
+    Moderator Maestro(.clk(clk), .rst(rst), .tick_tock(tick_tock));
+    
+    
     //branch target adder
     wire dummy_carry;
     N_bit_RCA #(32) pc_gen (.operand_a(pc_out), .operand_b(shift_out), .sum(pc_gen_out), .cout(dummy_carry));
     
+    
     //new mux(2) pc mux
-    mux_4x1 mux1(.a1(pc_inc_out), .b1(pc_gen_out), .c1(alu_out), .d1(d1), .sel(jorbranch), .y(pc_in));   
+    mux_2x1 branching_mux(.a1(alu_out), .b1(pc_gen_out), .sel(pc_mux_ctrl[0]), .y(branch_pc));   
  
+    
     //pc increment adder
     wire dummy_carry_2;
     N_bit_RCA #(32) pc_inc (.operand_a(pc_out), .operand_b(32'd4), .sum(pc_inc_out), .cout(dummy_carry_2));
