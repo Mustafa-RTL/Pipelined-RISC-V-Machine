@@ -92,15 +92,15 @@ module Pipelined(input clk, input rst);
      .Q({EX_MEM_pc_inc, EX_MEM_BranchAddOut,
      EX_MEM_ALU_out, EX_MEM_RegR2, EX_MEM_Rd, EX_MEM_jorbranch, EX_MEM_branch_type, EX_MEM_memsizesel, EX_MEM_memread, EX_MEM_memwrite, EX_MEM_Ctrl, EX_MEM_cf,EX_MEM_zf,EX_MEM_vf,EX_MEM_sf}));
    
-    wire [31:0] MEM_WB_pc_inc, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out;
+    wire [31:0] MEM_WB_pc_inc, MEM_WB_BranchAddOut, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out;
     wire [1:0] MEM_WB_regwrite_src;
     wire MEM_WB_memtoreg;
     wire MEM_WB_regwrite;
     wire [4:0] MEM_WB_Rd;
     wire [1:0] MEM_WB_pc_mux_ctrl;
-    N_bit_reg #(139) MEM_WB (.clk(clk),.rst(rst),.load(1'b1),
-     .D({pc_mux_ctrl, EX_MEM_Ctrl, EX_MEM_pc_inc, branch_pc, data_mem_out, EX_MEM_ALU_out, EX_MEM_Rd}),
-     .Q({MEM_WB_pc_mux_ctrl, MEM_WB_memtoreg, MEM_WB_regwrite, MEM_WB_regwrite_src, MEM_WB_pc_inc, MEM_WB_branch_pc, MEM_WB_Mem_out, MEM_WB_ALU_out,
+    N_bit_reg #(171) MEM_WB (.clk(clk),.rst(rst),.load(1'b1),
+     .D({pc_mux_ctrl, EX_MEM_Ctrl, EX_MEM_pc_inc, branch_pc, EX_MEM_BranchAddOut, data_mem_out, EX_MEM_ALU_out, EX_MEM_Rd}),
+     .Q({MEM_WB_pc_mux_ctrl, MEM_WB_memtoreg, MEM_WB_regwrite, MEM_WB_regwrite_src, MEM_WB_pc_inc, MEM_WB_branch_pc, MEM_WB_BranchAddOut, MEM_WB_Mem_out, MEM_WB_ALU_out,
      MEM_WB_Rd}));
 
     
@@ -116,7 +116,7 @@ module Pipelined(input clk, input rst);
     CU controlUnit (.tick_tock(tick_tock), .IR(IF_ID_Inst_writeData), .alufn(alufn), .branch_type(branch_type), .jorbranch(jorbranch), .regwritesrc(regwritesrc), .memread(memread),.memtoreg(memtoreg),.memwrite(memwrite),.alusrc(alusrc),.regwrite(regwrite), .memsizesel(memsizesel), .shamt(shamt));
     
        
-    RegFile reg_file (.clk(clk), .rst(rst), .tick_tock(tick_tock), .rs1_addr(IF_ID_Inst_writeData[19:15]), .rs2_addr(IF_ID_Inst_writeData[24:20]), .writereg_addr(IF_ID_Inst_writeData[11:7]),.writedata(write_data), .regwrite(MEM_WB_regwrite), .rs1(rs1), .rs2(rs2));
+    RegFile reg_file (.clk(clk), .rst(rst), .tick_tock(tick_tock), .rs1_addr(IF_ID_Inst_writeData[19:15]), .rs2_addr(IF_ID_Inst_writeData[24:20]), .writereg_addr(MEM_WB_Rd),.writedata(write_data), .regwrite(MEM_WB_regwrite), .rs1(rs1), .rs2(rs2));
     
  
     rv32_ImmGen IG (.tick_tock(tick_tock), .IR(IF_ID_Inst_writeData), .Imm(imm_out));
@@ -128,7 +128,7 @@ module Pipelined(input clk, input rst);
     
     wire [31:0] d1;
     assign d1=32'b0; // to avoid floating input**************************************************************
-    mux_4x1 wb_mux(.a1(MEM_WB_branch_pc), .b1(MEM_WB_pc_inc), .c1(wb_writedata), .d1(d1), .sel(MEM_WB_regwrite_src), .y(write_data));     
+    mux_4x1 wb_mux(.a1(MEM_WB_BranchAddOut), .b1(MEM_WB_pc_inc), .c1(wb_writedata), .d1(d1), .sel(MEM_WB_regwrite_src), .y(write_data));     
             
  
     prv32_ALU alu (.a(ID_EX_RegR1), .b(rs2_mux_out), .r(alu_out), .cf(cf),.zf(zf),.vf(vf),.sf(sf),.alufn(ID_EX_alufunc),.shamt(ID_EX_shamt));
