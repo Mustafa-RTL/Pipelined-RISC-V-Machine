@@ -137,7 +137,7 @@ module Pipelined(input clk, input rst);
     mux_2x1 #(32) mem_mux(.a(pc_in), .b(EX_MEM_ALU_out), .sel(tick_tock), .c(address));
     
     
-    Memory mem(.clk(clk), .tick_tock(tick_tock), .addr(address), .MemWrite(EX_MEM_memwrite), .MemRead(EX_MEM_memread), .HalfOperation(EX_MEM_memsizesel[1]), .ByteOperation(EX_MEM_memsizesel[0]), .data_write(EX_MEM_RegR2), .data_read(data_mem_out)); // shift adr not readdata
+    Memory memory_module(.clk(clk), .tick_tock(tick_tock), .addr(address), .MemWrite(EX_MEM_memwrite), .MemRead(EX_MEM_memread), .HalfOperation(EX_MEM_memsizesel[1]), .ByteOperation(EX_MEM_memsizesel[0]), .data_write(EX_MEM_RegR2), .data_read(data_mem_out)); // shift adr not readdata
     
     
     mux_2x1 #(32) before_wb(.a(MEM_WB_ALU_out), .b(MEM_WB_Mem_out), .sel(MEM_WB_memtoreg),.c(wb_writedata));  //write data mux
