@@ -22,7 +22,7 @@
 
 module ss_data_path_tb();
 reg clk,rst;
-integer counter = 0;
+/*integer counter = 0;
 
 wire [3:0] alufn;
 wire [1:0] jorbranch;
@@ -33,11 +33,11 @@ wire [1:0] memsizesel;
 wire [5:0] shamt;
 
 wire  [31:0] result;
-wire cf, zf, vf, sf;
+wire cf, zf, vf, sf;*/
     
     Pipelined  cpu(clk, rst);
     
-    CU cu(
+    /*CU cu(
     .tick_tock(cpu.tick_tock),
     .IR(cpu.memory_module.mem[counter-1]),
     .alufn(alufn),
@@ -51,24 +51,26 @@ wire cf, zf, vf, sf;
     .regwrite(regwrite),
     .memsizesel(memsizesel),
     .shamt(shamt)
-    );
+    );*/
     
-    prv32_ALU alu(
+    /*prv32_ALU alu(
     .a(cpu.reg_file.reg_x1_x31[cpu.memory_module.mem[counter-1][19:15]]), .b(cpu.reg_file.reg_x1_x31[cpu.memory_module.mem[counter-1]]),
 	.r(result),
 	.cf(cf), .zf(zf), .vf(vf), .sf(sf),
 	.alufn(alufn),
 	.shamt(shamt)
     );
-
+*/
     initial begin
         clk=0;
+        rst=1;
+        #25
         rst=0;
         forever #25 clk=~clk; 
     end
     
     
-    always @(negedge cpu.tick_tock) begin: Verify_moderator_0
+    /*always @(negedge cpu.tick_tock) begin: Verify_moderator_0
         counter = counter +1;
         #25
         if (cpu.data_mem_out != cpu.memory_module.mem[cpu.pc_out])
@@ -106,7 +108,7 @@ wire cf, zf, vf, sf;
         if (cpu.EX_MEM_memwrite)
             if (cpu.reg_file.reg_x1_x31[cpu.memory_module.mem[counter-2][19:15]] != cpu.memory_module.mem[cpu.reg_file.reg_x1_x31[cpu.memory_module.mem[counter-2]]])
                 $display("Storing Error");
-    end
+    end*/
     
      
 endmodule

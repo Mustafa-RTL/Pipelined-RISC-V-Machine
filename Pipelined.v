@@ -56,7 +56,7 @@ module Pipelined(input clk, input rst);
     
     //branch_crtl
     wire [2:0] branch_type;
-    reg [1:0] pc_mux_ctrl;
+    wire [1:0] pc_mux_ctrl;
     wire pc_inc_or_branch;
     wire [31:0] branch_pc;
     
@@ -110,7 +110,7 @@ module Pipelined(input clk, input rst);
     mux_2x1 #(32) pc_or_branch(.a(pc_inc_out), .b(MEM_WB_branch_pc), .sel(pc_inc_or_branch),.c(pc_in));
    
     
-    pc program_counter (.clk(clk), .pc_in(pc_in), .rst(rst), .pc_out(pc_out));
+    pc program_counter (.clk(clk), .pc_in(pc_in), .tick_tock(tick_tock), .rst(rst), .pc_out(pc_out));
     
     
     CU controlUnit (.tick_tock(tick_tock), .IR(IF_ID_Inst_writeData), .alufn(alufn), .branch_type(branch_type), .jorbranch(jorbranch), .regwritesrc(regwritesrc), .memread(memread),.memtoreg(memtoreg),.memwrite(memwrite),.alusrc(alusrc),.regwrite(regwrite), .memsizesel(memsizesel), .shamt(shamt));
@@ -134,7 +134,7 @@ module Pipelined(input clk, input rst);
     prv32_ALU alu (.a(ID_EX_RegR1), .b(rs2_mux_out), .r(alu_out), .cf(cf),.zf(zf),.vf(vf),.sf(sf),.alufn(ID_EX_alufunc),.shamt(ID_EX_shamt));
    
     
-    mux_2x1 #(32) mem_mux(.a(pc_in), .b(EX_MEM_ALU_out), .sel(tick_tock), .c(address));
+    mux_2x1 #(32) mem_mux(.a(pc_out), .b(EX_MEM_ALU_out), .sel(tick_tock), .c(address));
     
     
     Memory memory_module(.clk(clk), .tick_tock(tick_tock), .addr(address), .MemWrite(EX_MEM_memwrite), .MemRead(EX_MEM_memread), .HalfOperation(EX_MEM_memsizesel[1]), .ByteOperation(EX_MEM_memsizesel[0]), .data_write(EX_MEM_RegR2), .data_read(data_mem_out)); // shift adr not readdata
@@ -158,7 +158,7 @@ module Pipelined(input clk, input rst);
     
     
     //pc mux
-    mux_2x1 branching_mux(.a1(EX_MEM_ALU_out), .b1(EX_MEM_BranchAddOut), .sel(pc_mux_ctrl[0]), .y(branch_pc));   
+    mux_2x1 branching_mux(.a(EX_MEM_ALU_out), .b(EX_MEM_BranchAddOut), .sel(pc_mux_ctrl[0]), .c(branch_pc));   
  
     
     //pc increment adder
